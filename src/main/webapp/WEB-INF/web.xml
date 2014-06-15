@@ -11,4 +11,13 @@
 		<servlet-name>Hello</servlet-name>
 		<url-pattern>/hello</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>SQL</servlet-name>
+		<servlet-class>com.jd.samples.SQLServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SQL</servlet-name>
+		<url-pattern>/sql</url-pattern>
+	</servlet-mapping>
 </web-app>
