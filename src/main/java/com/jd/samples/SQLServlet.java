@@ -36,10 +36,10 @@ public class SQLServlet extends HttpServlet {
 			QueryRunner qRunner = new QueryRunner();
 			List<Map<String, Object>> query = qRunner.query(connection,
 					"select * from myuser", new MapListHandler());
-			result = "查询结果：" + query;
+			result = "鏌ヨ缁撴灉" + query;
 			connection.close();
 		} catch (SQLException e) {
-			result = "查询异常";
+			result = "寮傚父";
 			e.printStackTrace();
 		}
 
