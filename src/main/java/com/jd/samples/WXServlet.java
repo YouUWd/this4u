@@ -48,18 +48,18 @@ public class WXServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		Map<?, ?> parameterMap = req.getParameterMap();
 		logger.info(SimpleStringUtils.join("|", "DOPOST", parameterMap));
 		InputStream is = req.getInputStream();
-
+		String msg = "";
 		try {
-			logger.info(SimpleStringUtils.join("|", "DOPOST",
-					PushManage.pushManageXml(is)));
+			msg = PushManage.pushManageXml(is);
+			logger.info(SimpleStringUtils.join("|", "DOPOST", msg));
 		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(SimpleStringUtils.join("|", "DOPOST", msg), e);
 		}
-		super.doPost(req, resp);
+		PrintWriter out = resp.getWriter();
+		out.print(msg);
+		out.close();
 	}
 }
