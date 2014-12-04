@@ -20,9 +20,13 @@ public class PushManage {
 		String toName = ""; // 开发者微信号
 		String fromName = ""; // 发送方帐号（一个OpenID）
 		String type = ""; // 请求类型
-		String con = ""; // 消息内容(接收)
-		String event = ""; // 自定义按钮事件请求
-		String eKey = ""; // 事件请求key值
+
+		String content = ""; // 消息内容(接收)
+		String picUrl = "";// 图片链接
+
+		String lc_x = "";
+		String lc_y = "";
+		String address = "";
 
 		try {
 
@@ -35,41 +39,51 @@ public class PushManage {
 			List<?> list = root.getChildren();
 			for (int j = 0; j < list.size(); j++) {
 				// 获得结点
-				Element first = (Element) list.get(j);
+				Element element = (Element) list.get(j);
 
-				if (first.getName().equals("ToUserName")) {
-					toName = first.getValue().trim();
-				} else if (first.getName().equals("FromUserName")) {
-					fromName = first.getValue().trim();
-				} else if (first.getName().equals("MsgType")) {
-					type = first.getValue().trim();
-				} else if (first.getName().equals("Content")) {
-					con = first.getValue().trim();
-				} else if (first.getName().equals("Event")) {
-					event = first.getValue().trim();
-				} else if (first.getName().equals("EventKey")) {
-					eKey = first.getValue().trim();
+				if (element.getName().equals("ToUserName")) {
+					toName = element.getValue().trim();
+				} else if (element.getName().equals("FromUserName")) {
+					fromName = element.getValue().trim();
+				} else if (element.getName().equals("MsgType")) {
+					type = element.getValue().trim();
+				} else if (element.getName().equals("Content")) {
+					content = element.getValue().trim();
+				} else if (element.getName().equals("PicUrl")) {
+					picUrl = element.getValue().trim();
+				} else if (element.getName().equals("Location_X")) {
+					lc_x = element.getValue().trim();
+				} else if (element.getName().equals("Location_Y")) {
+					lc_y = element.getValue().trim();
+				} else if (element.getName().equals("Label")) {
+					address = element.getValue().trim();
 				}
 			}
 		} catch (IOException e) {
 			// 异常
 		}
 
-		if (type.equals("event")) { // 此为事件
-			if (event.equals("subscribe")) {// 此为 关注事件
-
-			} else if (event.equals("unsubscribe")) { // 此为取消关注事件
-
-			} else if (event.equals("CLICK")) { // 此为 自定义菜单按钮点击事件
-				// 以下为自定义按钮事件
-				if (eKey.equals("V1")) { // 菜单1
-					returnStr = getBackXMLTypeText(toName, fromName, "点击了菜单1");
-				} else if (eKey.equals("V2")) { // 菜单2
-					returnStr = getBackXMLTypeText(toName, fromName, "点击了菜单2");
-				}
-			}
-		} else if (type.equals("text")) { // 此为 文本信息
-			returnStr = getBackXMLTypeText(toName, fromName, "平台建设中，你输入了:" + con);
+		if (type.equals("text")) { // 此为 文本信息
+			returnStr = getBackXMLTypeText(toName, fromName,
+					"平台建设中，你输入了(文本信息):" + content);
+		} else if ("image".equals(type)) {
+			returnStr = getBackXMLTypeImg(toName, fromName, "图片", content,
+					picUrl);
+		} else if ("voice".equals(type)) {
+			returnStr = getBackXMLTypeText(toName, fromName,
+					"平台建设中，你输入了(声音信息):" + content);
+		} else if ("video".equals(type)) {
+			returnStr = getBackXMLTypeText(toName, fromName,
+					"平台建设中，你输入了(视频信息):" + content);
+		} else if ("location".equals(type)) {
+			returnStr = getBackXMLTypeText(toName, fromName,
+					"平台建设中，你输入了(位置信息):X=" + lc_x + ",Y=" + lc_y + " " + address);
+		} else if ("link".equals(type)) {
+			returnStr = getBackXMLTypeText(toName, fromName,
+					"平台建设中，你输入了(链接信息):" + content);
+		} else {
+			returnStr = getBackXMLTypeText(toName, fromName,
+					"平台建设中，你输入了(其他信息):" + content);
 		}
 
 		return returnStr;
@@ -183,12 +197,10 @@ public class PushManage {
 		Element fXML = new Element("Articles");
 		Element mXML = null;
 
-		// String url = "";
-		String ss = "";
 		mXML = new Element("item");
 		mXML.addContent(new Element("Title").setText(title));
 		mXML.addContent(new Element("Description").setText(content));
-		mXML.addContent(new Element("PicUrl").setText(ss));
+		mXML.addContent(new Element("PicUrl").setText(""));// 无图体现在这里
 		mXML.addContent(new Element("Url").setText(url));
 		fXML.addContent(mXML);
 		rootXML.addContent(fXML);
@@ -243,8 +255,4 @@ public class PushManage {
 		return returnStr;
 	}
 
-	public static void main(String[] args) {
-		String backXMLTypeText = getBackXMLTypeText("To", "fromName", "中文");
-		System.out.println(backXMLTypeText);
-	}
 }
