@@ -16,7 +16,7 @@ public class HelloServlet extends HttpServlet {
 		response.setContentType("text/plain");
 		response.setStatus(200);
 		PrintWriter writer = response.getWriter();
-		writer.println("Hello from JAE");
+		writer.println("Hello from JAE!我是中国人！");
 		writer.close();
 	}
 }
