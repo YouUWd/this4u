@@ -1,6 +1,7 @@
 package com.jd.samples;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -10,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.jdom2.JDOMException;
 
+import com.jd.samples.utils.PushManage;
 import com.jd.samples.utils.SignUtil;
 import com.jd.samples.utils.SimpleStringUtils;
 
@@ -48,6 +51,15 @@ public class WXServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		Map<?, ?> parameterMap = req.getParameterMap();
 		logger.info(SimpleStringUtils.join("|", "DOPOST", parameterMap));
+		InputStream is = req.getInputStream();
+
+		try {
+			logger.info(SimpleStringUtils.join("|", "DOPOST",
+					PushManage.pushManageXml(is)));
+		} catch (JDOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		super.doPost(req, resp);
 	}
 }
