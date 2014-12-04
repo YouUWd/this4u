@@ -9,7 +9,7 @@ public class SignUtil {
 	 * 与接口配置信息中的 token 要一致，这里赋予什么值，在接口配置信息中的Token就要填写什么值，
 	 * 两边保持一致即可，建议用项目名称、公司名称缩写等，我在这里用的是项目名称weixinface
 	 */
-	private static String token = "weixintest";
+	private static String token = "this4u";
 
 	/**
 	 * 验证签名
