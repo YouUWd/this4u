@@ -10,7 +10,7 @@
         <servlet-class>com.jd.samples.Log4jInit</servlet-class><!--log4j初始化servlet类的包路径-->  
         <init-param>  
         <param-name>log4j</param-name>  
-        <param-value>log4j.xml</param-value><!--log4j配置文件路径-->  
+        <param-value>/log4j.xml</param-value><!--log4j配置文件路径-->  
         </init-param>  
         <load-on-startup>1</load-on-startup>  
     </servlet>  
