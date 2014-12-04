@@ -17,7 +17,7 @@ public class HelloServlet extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		response.setStatus(200);
 		PrintWriter writer = response.getWriter();
-		writer.println("Hello from JAE!我是中国人！");
+		writer.println("Hello from JAE!鎴戞槸涓浗浜猴紒");
 		writer.close();
 	}
 }

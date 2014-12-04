@@ -16,25 +16,25 @@ public class PushManage {
 
 	public static String pushManageXml(InputStream is) throws JDOMException {
 
-		String returnStr = ""; // ·´»ØServlet×Ö·û´®
-		String toName = ""; // ¿ª·¢ÕßÎ¢ĞÅºÅ
-		String fromName = ""; // ·¢ËÍ·½ÕÊºÅ£¨Ò»¸öOpenID£©
-		String type = ""; // ÇëÇóÀàĞÍ
-		String con = ""; // ÏûÏ¢ÄÚÈİ(½ÓÊÕ)
-		String event = ""; // ×Ô¶¨Òå°´Å¥ÊÂ¼şÇëÇó
-		String eKey = ""; // ÊÂ¼şÇëÇókeyÖµ
+		String returnStr = ""; // åå›Servletå­—ç¬¦ä¸²
+		String toName = ""; // å¼€å‘è€…å¾®ä¿¡å·
+		String fromName = ""; // å‘é€æ–¹å¸å·ï¼ˆä¸€ä¸ªOpenIDï¼‰
+		String type = ""; // è¯·æ±‚ç±»å‹
+		String con = ""; // æ¶ˆæ¯å†…å®¹(æ¥æ”¶)
+		String event = ""; // è‡ªå®šä¹‰æŒ‰é’®äº‹ä»¶è¯·æ±‚
+		String eKey = ""; // äº‹ä»¶è¯·æ±‚keyå€¼
 
 		try {
 
 			SAXBuilder sax = new SAXBuilder();
 			Document doc = sax.build(is);
-			// »ñµÃÎÄ¼şµÄ¸ùÔªËØ
+			// è·å¾—æ–‡ä»¶çš„æ ¹å…ƒç´ 
 			Element root = doc.getRootElement();
 
-			// »ñµÃ¸ùÔªËØµÄµÚÒ»¼¶×Ó½Úµã
+			// è·å¾—æ ¹å…ƒç´ çš„ç¬¬ä¸€çº§å­èŠ‚ç‚¹
 			List<?> list = root.getChildren();
 			for (int j = 0; j < list.size(); j++) {
-				// »ñµÃ½áµã
+				// è·å¾—ç»“ç‚¹
 				Element first = (Element) list.get(j);
 
 				if (first.getName().equals("ToUserName")) {
@@ -52,31 +52,31 @@ public class PushManage {
 				}
 			}
 		} catch (IOException e) {
-			// Òì³£
+			// å¼‚å¸¸
 		}
 
-		if (type.equals("event")) { // ´ËÎªÊÂ¼ş
-			if (event.equals("subscribe")) {// ´ËÎª ¹Ø×¢ÊÂ¼ş
+		if (type.equals("event")) { // æ­¤ä¸ºäº‹ä»¶
+			if (event.equals("subscribe")) {// æ­¤ä¸º å…³æ³¨äº‹ä»¶
 
-			} else if (event.equals("unsubscribe")) { // ´ËÎªÈ¡Ïû¹Ø×¢ÊÂ¼ş
+			} else if (event.equals("unsubscribe")) { // æ­¤ä¸ºå–æ¶ˆå…³æ³¨äº‹ä»¶
 
-			} else if (event.equals("CLICK")) { // ´ËÎª ×Ô¶¨Òå²Ëµ¥°´Å¥µã»÷ÊÂ¼ş
-				// ÒÔÏÂÎª×Ô¶¨Òå°´Å¥ÊÂ¼ş
-				if (eKey.equals("V1")) { // ²Ëµ¥1
-					returnStr = getBackXMLTypeText(toName, fromName, "µã»÷ÁË²Ëµ¥1");
-				} else if (eKey.equals("V2")) { // ²Ëµ¥2
-					returnStr = getBackXMLTypeText(toName, fromName, "µã»÷ÁË²Ëµ¥2");
+			} else if (event.equals("CLICK")) { // æ­¤ä¸º è‡ªå®šä¹‰èœå•æŒ‰é’®ç‚¹å‡»äº‹ä»¶
+				// ä»¥ä¸‹ä¸ºè‡ªå®šä¹‰æŒ‰é’®äº‹ä»¶
+				if (eKey.equals("V1")) { // èœå•1
+					returnStr = getBackXMLTypeText(toName, fromName, "ç‚¹å‡»äº†èœå•1");
+				} else if (eKey.equals("V2")) { // èœå•2
+					returnStr = getBackXMLTypeText(toName, fromName, "ç‚¹å‡»äº†èœå•2");
 				}
 			}
-		} else if (type.equals("text")) { // ´ËÎª ÎÄ±¾ĞÅÏ¢
-			returnStr = getBackXMLTypeText(toName, fromName, "Æ½Ì¨½¨ÉèÖĞ£¬ÄãÊäÈëÁË:" + con);
+		} else if (type.equals("text")) { // æ­¤ä¸º æ–‡æœ¬ä¿¡æ¯
+			returnStr = getBackXMLTypeText(toName, fromName, "å¹³å°å»ºè®¾ä¸­ï¼Œä½ è¾“å…¥äº†:" + con);
 		}
 
 		return returnStr;
 	}
 
 	/**
-	 * ±àÒëÎÄ±¾ĞÅÏ¢
+	 * ç¼–è¯‘æ–‡æœ¬ä¿¡æ¯
 	 * 
 	 * @author xiaowu
 	 * @since 2013-9-27
@@ -110,7 +110,7 @@ public class PushManage {
 	}
 
 	/**
-	 * ±àÒëÍ¼Æ¬ĞÅÏ¢(µ¥Í¼Ä£Ê½)
+	 * ç¼–è¯‘å›¾ç‰‡ä¿¡æ¯(å•å›¾æ¨¡å¼)
 	 * 
 	 * @author xiaowu
 	 * @since 2013-9-27
@@ -155,7 +155,7 @@ public class PushManage {
 	}
 
 	/**
-	 * ±àÒëÍ¼Æ¬ĞÅÏ¢(ÎŞÍ¼Ä£Ê½)
+	 * ç¼–è¯‘å›¾ç‰‡ä¿¡æ¯(æ— å›¾æ¨¡å¼)
 	 * 
 	 * @author xiaowu
 	 * @since 2013-9-27
@@ -202,7 +202,7 @@ public class PushManage {
 	}
 
 	/**
-	 * ±àÒëÒôÀÖĞÅÏ¢
+	 * ç¼–è¯‘éŸ³ä¹ä¿¡æ¯
 	 * 
 	 * @author xiaowu
 	 * @since 2013-9-27
@@ -228,8 +228,8 @@ public class PushManage {
 
 		Element mXML = new Element("Music");
 
-		mXML.addContent(new Element("Title").setText("ÒôÀÖ"));
-		mXML.addContent(new Element("Description").setText("ÒôÀÖÈÃÈËĞÄÇéÊæ³©£¡"));
+		mXML.addContent(new Element("Title").setText("éŸ³ä¹"));
+		mXML.addContent(new Element("Description").setText("éŸ³ä¹è®©äººå¿ƒæƒ…èˆ’ç•…ï¼"));
 		mXML.addContent(new Element("MusicUrl").setText(content));
 		mXML.addContent(new Element("HQMusicUrl").setText(content));
 
@@ -244,7 +244,7 @@ public class PushManage {
 	}
 
 	public static void main(String[] args) {
-		String backXMLTypeText = getBackXMLTypeText("To", "fromName", "ÖĞÎÄ");
+		String backXMLTypeText = getBackXMLTypeText("To", "fromName", "ä¸­æ–‡");
 		System.out.println(backXMLTypeText);
 	}
 }

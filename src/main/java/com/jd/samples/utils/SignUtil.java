@@ -6,13 +6,13 @@ import java.util.Arrays;
 
 public class SignUtil {
 	/**
-	 * Óë½Ó¿ÚÅäÖÃĞÅÏ¢ÖĞµÄ token ÒªÒ»ÖÂ£¬ÕâÀï¸³ÓèÊ²Ã´Öµ£¬ÔÚ½Ó¿ÚÅäÖÃĞÅÏ¢ÖĞµÄToken¾ÍÒªÌîĞ´Ê²Ã´Öµ£¬
-	 * Á½±ß±£³ÖÒ»ÖÂ¼´¿É£¬½¨ÒéÓÃÏîÄ¿Ãû³Æ¡¢¹«Ë¾Ãû³ÆËõĞ´µÈ£¬ÎÒÔÚÕâÀïÓÃµÄÊÇÏîÄ¿Ãû³Æweixinface
+	 * ä¸æ¥å£é…ç½®ä¿¡æ¯ä¸­çš„ token è¦ä¸€è‡´ï¼Œè¿™é‡Œèµ‹äºˆä»€ä¹ˆå€¼ï¼Œåœ¨æ¥å£é…ç½®ä¿¡æ¯ä¸­çš„Tokenå°±è¦å¡«å†™ä»€ä¹ˆå€¼ï¼Œ
+	 * ä¸¤è¾¹ä¿æŒä¸€è‡´å³å¯ï¼Œå»ºè®®ç”¨é¡¹ç›®åç§°ã€å…¬å¸åç§°ç¼©å†™ç­‰ï¼Œæˆ‘åœ¨è¿™é‡Œç”¨çš„æ˜¯é¡¹ç›®åç§°weixinface
 	 */
 	private static String token = "this4u";
 
 	/**
-	 * ÑéÖ¤Ç©Ãû
+	 * éªŒè¯ç­¾å
 	 * 
 	 * @param signature
 	 * @param timestamp
@@ -22,7 +22,7 @@ public class SignUtil {
 	public static boolean checkSignature(String signature, String timestamp,
 			String nonce) {
 		String[] arr = new String[] { token, timestamp, nonce };
-		// ½« token, timestamp, nonce Èı¸ö²ÎÊı½øĞĞ×ÖµäÅÅĞò
+		// å°† token, timestamp, nonce ä¸‰ä¸ªå‚æ•°è¿›è¡Œå­—å…¸æ’åº
 		Arrays.sort(arr);
 		StringBuilder content = new StringBuilder();
 		for (int i = 0; i < arr.length; i++) {
@@ -33,7 +33,7 @@ public class SignUtil {
 
 		try {
 			md = MessageDigest.getInstance("SHA-1");
-			// ½«Èı¸ö²ÎÊı×Ö·û´®Æ´½Ó³ÉÒ»¸ö×Ö·û´®½øĞĞ shal ¼ÓÃÜ
+			// å°†ä¸‰ä¸ªå‚æ•°å­—ç¬¦ä¸²æ‹¼æ¥æˆä¸€ä¸ªå­—ç¬¦ä¸²è¿›è¡Œ shal åŠ å¯†
 			byte[] digest = md.digest(content.toString().getBytes());
 			tmpStr = byteToStr(digest);
 		} catch (NoSuchAlgorithmException e) {
@@ -41,12 +41,12 @@ public class SignUtil {
 			e.printStackTrace();
 		}
 		content = null;
-		// ½«sha1¼ÓÃÜºóµÄ×Ö·û´®¿ÉÓësignature¶Ô±È£¬±êÊ¶¸ÃÇëÇóÀ´Ô´ÓÚÎ¢ĞÅ
+		// å°†sha1åŠ å¯†åçš„å­—ç¬¦ä¸²å¯ä¸signatureå¯¹æ¯”ï¼Œæ ‡è¯†è¯¥è¯·æ±‚æ¥æºäºå¾®ä¿¡
 		return tmpStr != null ? tmpStr.equals(signature.toUpperCase()) : false;
 	}
 
 	/**
-	 * ½«×Ö½ÚÊı×é×ª»»ÎªÊ®Áù½øÖÆ×Ö·û´®
+	 * å°†å­—èŠ‚æ•°ç»„è½¬æ¢ä¸ºåå…­è¿›åˆ¶å­—ç¬¦ä¸²
 	 * 
 	 * @param digest
 	 * @return
@@ -61,7 +61,7 @@ public class SignUtil {
 	}
 
 	/**
-	 * ½«×Ö½Ú×ª»»ÎªÊ®Áù½øÖÆ×Ö·û´®
+	 * å°†å­—èŠ‚è½¬æ¢ä¸ºåå…­è¿›åˆ¶å­—ç¬¦ä¸²
 	 * 
 	 * @param b
 	 * @return
