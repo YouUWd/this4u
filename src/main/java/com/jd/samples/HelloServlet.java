@@ -14,6 +14,7 @@ public class HelloServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/plain");
+		response.setCharacterEncoding("utf-8");
 		response.setStatus(200);
 		PrintWriter writer = response.getWriter();
 		writer.println("Hello from JAE!我是中国人！");

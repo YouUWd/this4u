@@ -58,6 +58,8 @@ public class WXServlet extends HttpServlet {
 		} catch (JDOMException e) {
 			logger.error(SimpleStringUtils.join("|", "DOPOST", msg), e);
 		}
+		resp.setContentType("text/xml");
+		resp.setCharacterEncoding("utf-8");
 		PrintWriter out = resp.getWriter();
 		out.print(msg);
 		out.close();

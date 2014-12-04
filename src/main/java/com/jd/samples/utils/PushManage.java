@@ -69,7 +69,7 @@ public class PushManage {
 				}
 			}
 		} else if (type.equals("text")) { // 此为 文本信息
-			returnStr = getBackXMLTypeText(toName, fromName, "输入了:" + con);
+			returnStr = getBackXMLTypeText(toName, fromName, "平台建设中，你输入了:" + con);
 		}
 
 		return returnStr;
@@ -244,7 +244,7 @@ public class PushManage {
 	}
 
 	public static void main(String[] args) {
-		String backXMLTypeText = getBackXMLTypeText("To", "fromName", "content");
+		String backXMLTypeText = getBackXMLTypeText("To", "fromName", "中文");
 		System.out.println(backXMLTypeText);
 	}
 }
