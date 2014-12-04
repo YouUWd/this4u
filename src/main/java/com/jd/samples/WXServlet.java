@@ -25,19 +25,19 @@ public class WXServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// Î¢ĞÅ¼ÓÃÜÇ©Ãû
+		// å¾®ä¿¡åŠ å¯†ç­¾å
 		String signature = request.getParameter("signature");
-		// Ê±¼äÂ¾
+		// æ—¶é—´æˆ®
 		String timestamp = request.getParameter("timestamp");
-		// Ëæ»úÊı
+		// éšæœºæ•°
 		String nonce = request.getParameter("nonce");
-		// Ëæ»ú×Ö·û´®
+		// éšæœºå­—ç¬¦ä¸²
 		String echostr = request.getParameter("echostr");
 		logger.info(SimpleStringUtils.join("|", "DOGET", signature, timestamp,
 				nonce, echostr));
 
 		PrintWriter out = response.getWriter();
-		// Í¨¹ı¼ìÑé signature ¶ÔÇëÇó½øĞĞĞ£Ñé£¬ÈôĞ£Ñé³É¹¦ÔòÔ­Ñù·µ»Ø echostr£¬±íÊ¾½ÓÈë³É¹¦£¬·ñÔò½ÓÈëÊ§°Ü
+		// é€šè¿‡æ£€éªŒ signature å¯¹è¯·æ±‚è¿›è¡Œæ ¡éªŒï¼Œè‹¥æ ¡éªŒæˆåŠŸåˆ™åŸæ ·è¿”å› echostrï¼Œè¡¨ç¤ºæ¥å…¥æˆåŠŸï¼Œå¦åˆ™æ¥å…¥å¤±è´¥
 		if (SignUtil.checkSignature(signature, timestamp, nonce)) {
 			out.print(echostr);
 		}
