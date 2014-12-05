@@ -65,7 +65,7 @@ public class DBManager {
 			System.out.println("====start updateLocation====");
 			updated = qRunner
 					.update(connection,
-							"update spcinfo set lc_x = ?,lc_y=?,address=?,createTime=NOW()) where usid = ?",
+							"update spcinfo set lc_x = ?,lc_y=?,address=?,createTime=NOW() where usid = ?",
 							lc_x, lc_y, address, usid);
 			if (updated == 0) {
 				updated = qRunner
