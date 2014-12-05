@@ -12,7 +12,12 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 
+import com.jd.samples.DBManager;
+import com.jd.samples.bean.WxPcInfo;
+
 public class PushManage {
+
+	private static String SEPARATOR = System.getProperty("line.separator");
 
 	public static String pushManageXml(InputStream is) throws JDOMException {
 
@@ -66,11 +71,72 @@ public class PushManage {
 		}
 
 		if (type.equals("text")) { // 此为 文本信息
-			returnStr = getBackXMLTypeText(toName, fromName,
-					"平台建设中，你输入了(文本信息):" + content);
 			// 更新目的地信息
-			if (content.startsWith("GO:")) {
-				DBManager.updateDest(content.substring(3).trim(), fromName);
+			if (content.startsWith("GO-")) {
+				String dest = content.substring(3).trim();
+				int updateDest = DBManager.updateDest(dest, fromName);
+				System.out.println("=======" + updateDest);
+				if (updateDest > 0) {
+					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
+							"您发布的到【" + dest + "】的拼车信息已经发布成功，有效期30分钟~");
+				} else {
+					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
+							"请发送您当前的位置信息~");
+				}
+			} else if (content.startsWith("TO-")) {
+				WxPcInfo location = DBManager.queryLocation(fromName);
+				if (location == null) {
+					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
+							"您还没告诉我您的位置信息呢，请先发送位置~");
+				} else {
+					List<WxPcInfo> infos = DBManager.queryInfos(
+							location.getLc_x(), location.getLc_y());
+					StringBuilder builder = new StringBuilder("欢迎使用即刻拼车平台:")
+							.append(SEPARATOR);
+					if (infos == null) {
+						builder.append("您周围1km还没有人发布拼车信息呢，快去邀请你认识的小伙伴吧~")
+								.append(SEPARATOR);
+					} else {
+						String dest = content.substring(3);
+						StringBuilder infosStr = new StringBuilder();
+						StringBuilder infosFitStr = new StringBuilder();
+						int index = 0;
+						int indexFit = 0;
+						for (WxPcInfo wxPcInfo : infos) {
+							if (wxPcInfo.getDestination().contains(dest)) {
+								indexFit++;
+								infosFitStr.append(indexFit).append(":")
+										.append(wxPcInfo.getAddress())
+										.append("--->")
+										.append(wxPcInfo.getDestination());
+							}
+							index++;
+							infosStr.append(index).append(":")
+									.append(wxPcInfo.getAddress())
+									.append("--->")
+									.append(wxPcInfo.getDestination());
+						}
+						if (infosFitStr.length() == 0) {
+							builder.append(
+									"没有找到你需要的拼车信息,您周围的人发布了以下拼车信息，看看是否符合您的要求~")
+									.append(SEPARATOR);
+							builder.append(infosStr).append(SEPARATOR);
+						} else {
+							builder.append(infosFitStr).append(SEPARATOR);
+						}
+						returnStr = PushManage.getBackXMLTypeText(toName,
+								fromName, builder.toString());
+					}
+				}
+			} else {
+				StringBuilder builder = new StringBuilder("欢迎使用即刻拼车平台:")
+						.append(SEPARATOR);
+				builder.append("首先请发送您的位置信息").append(SEPARATOR);
+				builder.append("1：信息发布者发送GO-目的地-联系方式").append(SEPARATOR);
+				builder.append("2：信息查询者发送TO-目的地").append(SEPARATOR);
+				builder.append("如：GO-亚运村-某先生：13812345678").append(SEPARATOR);
+				returnStr = PushManage.getBackXMLTypeText(toName, fromName,
+						builder.toString());
 			}
 		} else if ("image".equals(type)) {
 			returnStr = getBackXMLTypeImg(toName, fromName, "图片", content,
@@ -84,10 +150,8 @@ public class PushManage {
 		} else if ("location".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(位置信息):X=" + lc_x + ",Y=" + lc_y + " " + address);
-			System.out.println("====start insert or update location====");
 			DBManager.updateLocation(fromName, Float.parseFloat(lc_x),
 					Float.parseFloat(lc_y), address);// 更新用户地理位置信息
-			System.out.println("====finish insert or update location====");
 		} else if ("link".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(链接信息):" + content);

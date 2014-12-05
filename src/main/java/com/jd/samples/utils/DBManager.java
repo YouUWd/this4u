@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.log4j.Logger;
@@ -89,7 +90,7 @@ public class DBManager {
 		try {
 			wxPcInfos = qRunner
 					.query(connection,
-							"select * from spcinfo where lc_x between (?,?) and lc_y between (?,?)",
+							"select * from spcinfo where lc_x between ? AND ? and lc_y between ? AND ?",
 							new BeanListHandler<WxPcInfo>(WxPcInfo.class),
 							lc_x - 1, lc_x + 1, lc_y - 1, lc_y + 1);
 		} catch (SQLException e) {
@@ -97,6 +98,21 @@ public class DBManager {
 		}
 		closeConnection(connection);
 		return wxPcInfos;
+	}
+
+	public static WxPcInfo queryLocation(String usid) {
+		Connection connection = getConnection();
+		QueryRunner qRunner = new QueryRunner();
+		WxPcInfo wxPcInfo = null;
+		try {
+			wxPcInfo = qRunner.query(connection,
+					"select lc_x,lc_y from spcinfo where usid = ?",
+					new BeanHandler<WxPcInfo>(WxPcInfo.class), usid);
+		} catch (SQLException e) {
+			logger.error("queryInfos fail", e);
+		}
+		closeConnection(connection);
+		return wxPcInfo;
 	}
 
 	public static int updateDest(String dest, String usid) {
