@@ -70,7 +70,7 @@ public class DBManager {
 			if (updated == 0) {
 				updated = qRunner
 						.update(connection,
-								"insert into spcinfo (usid,lc_x,lc_y,address,createTime=NOW())",
+								"insert into spcinfo (usid,lc_x,lc_y,address)",
 								usid, lc_x, lc_y, address);
 			}
 			System.out.println("====start updateLocation===="+updated);
