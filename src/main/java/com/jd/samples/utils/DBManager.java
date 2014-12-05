@@ -90,7 +90,7 @@ public class DBManager {
 		try {
 			wxPcInfos = qRunner
 					.query(connection,
-							"select * from spcinfo where lc_x between ? AND ? and lc_y between ? AND ?",
+							"select * from spcinfo where lc_x between ? AND ? and lc_y between ? AND ? and createTime > TIMESTAMPADD(MINUTE,-30,NOW())",
 							new BeanListHandler<WxPcInfo>(WxPcInfo.class),
 							lc_x - 1, lc_x + 1, lc_y - 1, lc_y + 1);
 		} catch (SQLException e) {
