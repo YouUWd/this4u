@@ -66,6 +66,10 @@ public class PushManage {
 		if (type.equals("text")) { // 此为 文本信息
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(文本信息):" + content);
+			// 更新目的地信息
+			if (content.startsWith("GO:")) {
+				DBManager.updateDest(content.substring(3).trim(), fromName);
+			}
 		} else if ("image".equals(type)) {
 			returnStr = getBackXMLTypeImg(toName, fromName, "图片", content,
 					picUrl);
@@ -78,6 +82,8 @@ public class PushManage {
 		} else if ("location".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(位置信息):X=" + lc_x + ",Y=" + lc_y + " " + address);
+			DBManager.updateLocation(fromName, Float.parseFloat(lc_x),
+					Float.parseFloat(lc_y), address);// 更新用户地理位置信息
 		} else if ("link".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(链接信息):" + content);
