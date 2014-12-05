@@ -23,7 +23,7 @@ public class SQLServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/plain");
+		response.setContentType("text/plain;charset=utf-8");
 		response.setStatus(200);
 		PrintWriter writer = response.getWriter();
 
