@@ -70,13 +70,13 @@ public class DBManager {
 			if (updated == 0) {
 				updated = qRunner
 						.update(connection,
-								"insert into spcinfo (usid,lc_x,lc_y,address)",
+								"insert into spcinfo (usid,lc_x,lc_y,address) values (?,?,?,?)",
 								usid, lc_x, lc_y, address);
 			}
-			System.out.println("====start updateLocation===="+updated);
+			System.out.println("====start updateLocation====" + updated);
 		} catch (SQLException e) {
 			logger.error("updateLocation fail", e);
-			System.out.println("====SQLException===="+e);
+			System.out.println("====SQLException====" + e);
 		}
 		closeConnection(connection);
 		return updated;
