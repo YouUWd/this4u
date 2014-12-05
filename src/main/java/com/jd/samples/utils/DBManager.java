@@ -82,18 +82,21 @@ public class DBManager {
 		return updated;
 	}
 
-	public static List<WxPcInfo> queryInfos() {
+	public static List<WxPcInfo> queryInfos(float lc_x, float lc_y) {
 		Connection connection = getConnection();
 		QueryRunner qRunner = new QueryRunner();
-		List<WxPcInfo> query = null;
+		List<WxPcInfo> wxPcInfos = null;
 		try {
-			query = qRunner.query(connection, "select * from spcinfo",
-					new BeanListHandler<WxPcInfo>(WxPcInfo.class));
+			wxPcInfos = qRunner
+					.query(connection,
+							"select * from spcinfo where lc_x between (?,?) and lc_y between (?,?)",
+							new BeanListHandler<WxPcInfo>(WxPcInfo.class),
+							lc_x - 1, lc_x + 1, lc_y - 1, lc_y + 1);
 		} catch (SQLException e) {
 			logger.error("queryInfos fail", e);
 		}
 		closeConnection(connection);
-		return query;
+		return wxPcInfos;
 	}
 
 	public static int updateDest(String dest, String usid) {

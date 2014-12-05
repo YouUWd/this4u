@@ -24,6 +24,8 @@ public class PushManage {
 		String content = ""; // 消息内容(接收)
 		String picUrl = "";// 图片链接
 
+		// Location_X 地理位置维度
+		// Location_Y 地理位置经度
 		String lc_x = "";
 		String lc_y = "";
 		String address = "";
