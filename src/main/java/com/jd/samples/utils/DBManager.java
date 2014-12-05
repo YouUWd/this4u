@@ -62,6 +62,7 @@ public class DBManager {
 		QueryRunner qRunner = new QueryRunner();
 		int updated = 0;
 		try {
+			System.out.println("====start updateLocation====");
 			updated = qRunner
 					.update(connection,
 							"update spcinfo set lc_x = ?,lc_y=?,address=?,createTime=NOW()) where usid = ?",
@@ -72,8 +73,10 @@ public class DBManager {
 								"insert into spcinfo (usid,lc_x,lc_y,address,createTime=NOW())",
 								usid, lc_x, lc_y, address);
 			}
+			System.out.println("====start updateLocation===="+updated);
 		} catch (SQLException e) {
 			logger.error("updateLocation fail", e);
+			System.out.println("====SQLException===="+e);
 		}
 		closeConnection(connection);
 		return updated;

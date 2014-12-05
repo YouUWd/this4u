@@ -82,8 +82,10 @@ public class PushManage {
 		} else if ("location".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(位置信息):X=" + lc_x + ",Y=" + lc_y + " " + address);
+			System.out.println("====start insert or update location====");
 			DBManager.updateLocation(fromName, Float.parseFloat(lc_x),
 					Float.parseFloat(lc_y), address);// 更新用户地理位置信息
+			System.out.println("====finish insert or update location====");
 		} else if ("link".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(链接信息):" + content);
