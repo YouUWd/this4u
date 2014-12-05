@@ -12,7 +12,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 
-import com.jd.samples.DBManager;
 import com.jd.samples.bean.WxPcInfo;
 
 public class PushManage {
