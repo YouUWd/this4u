@@ -79,7 +79,7 @@ public class PushManage {
 
 		if (type.equals("text")) { // 此为 文本信息
 			// 更新目的地信息
-			if (content.startsWith("GO/")) {
+			if (content.startsWith("GO/") || content.startsWith("go/")) {
 				String dest = content.substring(3).trim();
 				int updateDest = DBManager.updateDest(dest, fromName);
 				if (updateDest > 0) {
@@ -89,7 +89,7 @@ public class PushManage {
 					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
 							"请发送您当前的位置信息~");
 				}
-			} else if (content.startsWith("TO/")) {
+			} else if (content.startsWith("TO/") || content.startsWith("to/")) {
 				WxPcInfo location = DBManager.queryLocation(fromName);
 				if (location == null) {
 					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
