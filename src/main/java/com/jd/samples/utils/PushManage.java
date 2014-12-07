@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -15,6 +16,8 @@ import org.jdom2.output.XMLOutputter;
 import com.jd.samples.bean.WxPcInfo;
 
 public class PushManage {
+
+	private static final Logger logger = Logger.getLogger(PushManage.class);
 
 	private static String SEPARATOR = System.getProperty("line.separator");
 
@@ -33,6 +36,9 @@ public class PushManage {
 		String lc_x = "";
 		String lc_y = "";
 		String address = "";
+
+		// 事件类
+		String event = "";
 
 		try {
 
@@ -63,6 +69,8 @@ public class PushManage {
 					lc_y = element.getValue().trim();
 				} else if (element.getName().equals("Label")) {
 					address = element.getValue().trim();
+				} else if (element.getName().equals("Event")) {
+					event = element.getValue().trim();
 				}
 			}
 		} catch (IOException e) {
@@ -74,7 +82,6 @@ public class PushManage {
 			if (content.startsWith("GO/")) {
 				String dest = content.substring(3).trim();
 				int updateDest = DBManager.updateDest(dest, fromName);
-				System.out.println("=======" + updateDest);
 				if (updateDest > 0) {
 					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
 							"您发布的到【" + dest + "】的拼车信息已经发布成功，有效期30分钟~");
@@ -157,9 +164,23 @@ public class PushManage {
 		} else if ("link".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(链接信息):" + content);
+		} else if ("event".equals(type) && "subscribe".equals(event)) {// 订阅
+			StringBuilder builder = new StringBuilder("欢迎使用即刻拼车平台:")
+					.append(SEPARATOR);
+			builder.append("首先请发送您的位置信息").append(SEPARATOR);
+			builder.append("1：信息发布者发送GO/目的地/联系方式").append(SEPARATOR);
+			builder.append("2：信息查询者发送TO/目的地").append(SEPARATOR);
+			builder.append("如：\"GO/亚运村-某先生/13812345678\"").append(SEPARATOR);
+			returnStr = PushManage.getBackXMLTypeText(toName, fromName,
+					builder.toString());
+			logger.info(SimpleStringUtils.join("|", fromName, "订阅了我"));
+		} else if ("event".equals(type) && "unsubscribe".equals(event)) {// 取消订阅
+			logger.info(SimpleStringUtils.join("|", fromName, "取消了对我的订阅"));
 		} else {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(其他信息):" + content);
+			logger.info(SimpleStringUtils.join("|", fromName, "输入了(其他信息)",
+					content));
 		}
 
 		return returnStr;
