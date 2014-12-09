@@ -14,6 +14,8 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.log4j.Logger;
 
 import com.jd.samples.bean.WxPcInfo;
+import com.jd.samples.bean.WxSqInfo;
+import com.jd.samples.bean.WxUserInfo;
 
 public class DBManager {
 	private static final Logger logger = Logger.getLogger(DBManager.class);
@@ -138,6 +140,107 @@ public class DBManager {
 		}
 		closeConnection(connection);
 		return updated;
+	}
+
+	// ###########################################社区信息模块###############################################
+	/**
+	 * @param lc_x
+	 *            纬度
+	 * @param lc_y
+	 *            经度
+	 * @return 周边社区服务信息
+	 */
+	public static List<WxSqInfo> querySqInfos(float lc_x, float lc_y) {
+		Connection connection = getConnection();
+		QueryRunner qRunner = new QueryRunner();
+		List<WxSqInfo> wxPcInfos = null;
+		try {
+			// 1km范围内的经纬度
+			double[] around = DistanceUtil.getAround(lc_x, lc_y, 1000);
+			wxPcInfos = qRunner
+					.query(connection,
+							"select sq.* from sqinfo sq left join wuInfo wu on sq.usid = wu.usid where wu.lc_x between ? AND ? and wu.lc_y between ? AND ? and sq.createTime > TIMESTAMPADD(MONTH,-1,NOW())",
+							new BeanListHandler<WxSqInfo>(WxSqInfo.class),
+							around[0], around[2], around[1], around[3]);
+		} catch (SQLException e) {
+			logger.error("querySqInfos fail", e);
+		}
+		closeConnection(connection);
+		return wxPcInfos;
+	}
+
+	/**
+	 * @param usid
+	 * @param lc_x
+	 * @param lc_y
+	 * @param address
+	 * @return 更新用户信息
+	 */
+	public static int updateWuInfo(String usid, float lc_x, float lc_y,
+			String address) {
+		Connection connection = getConnection();
+		QueryRunner qRunner = new QueryRunner();
+		int updated = 0;
+		try {
+			updated = qRunner
+					.update(connection,
+							"update wuinfo set lc_x = ?,lc_y=?,address=?,createTime=NOW() where usid = ?",
+							lc_x, lc_y, address, usid);
+			if (updated == 0) {
+				updated = qRunner
+						.update(connection,
+								"insert into wuinfo (usid,lc_x,lc_y,address) values (?,?,?,?)",
+								usid, lc_x, lc_y, address);
+			}
+		} catch (SQLException e) {
+			logger.error("updateWuInfo fail", e);
+		}
+		closeConnection(connection);
+		return updated;
+	}
+
+	/**
+	 * @param usid
+	 * @param serviceInfo
+	 * @return 更新微信社区信息
+	 */
+	public static int updateWxSqInfo(String usid, String serviceInfo) {
+		Connection connection = getConnection();
+		QueryRunner qRunner = new QueryRunner();
+		int updated = 0;
+		try {
+			updated = qRunner.update(connection,
+					"update sqinfo set serviceInfo = ? where usid = ?",
+					serviceInfo, usid);
+			if (updated == 0) {
+				updated = qRunner.update(connection,
+						"insert into sqinfo (usid,serviceInfo) values (?,?)",
+						usid, serviceInfo);
+			}
+		} catch (SQLException e) {
+			logger.error("updateWxSqInfo fail", e);
+		}
+		closeConnection(connection);
+		return updated;
+	}
+
+	/**
+	 * @param usid
+	 * @return 查询用户信息
+	 */
+	public static WxUserInfo queryWxUserInfo(String usid) {
+		Connection connection = getConnection();
+		QueryRunner qRunner = new QueryRunner();
+		WxUserInfo wxUserInfo = null;
+		try {
+			wxUserInfo = qRunner.query(connection,
+					"select * from wuInfo where usid = ?",
+					new BeanHandler<WxUserInfo>(WxUserInfo.class), usid);
+		} catch (SQLException e) {
+			logger.error("queryWxUserInfo fail", e);
+		}
+		closeConnection(connection);
+		return wxUserInfo;
 	}
 
 }

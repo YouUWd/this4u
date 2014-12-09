@@ -14,6 +14,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 
 import com.jd.samples.bean.WxPcInfo;
+import com.jd.samples.bean.WxSqInfo;
+import com.jd.samples.bean.WxUserInfo;
 
 public class PushManage {
 
@@ -100,7 +102,7 @@ public class PushManage {
 					StringBuilder builder = new StringBuilder("欢迎使用即刻拼车平台:")
 							.append(SEPARATOR);
 					if (infos == null) {
-						builder.append("您周围1km还没有人发布拼车信息呢，快去邀请你认识的小伙伴吧~")
+						builder.append("您周围1km还没有人发布拼车信息呢，快去邀请你认识的小伙伴前来发布吧~")
 								.append(SEPARATOR);
 					} else {
 						String dest = content.substring(3);
@@ -136,14 +138,67 @@ public class PushManage {
 								fromName, builder.toString());
 					}
 				}
+			} else if (content.startsWith("SQ") || content.startsWith("sq")) {
+				WxUserInfo from = DBManager.queryWxUserInfo(fromName);
+				if (from == null) {
+					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
+							"您还没告诉我您的位置信息呢，请先发送位置~");
+				} else {
+					StringBuilder builder = new StringBuilder();
+					List<WxSqInfo> sqInfos = DBManager.querySqInfos(
+							from.getLc_x(), from.getLc_y());
+					if (sqInfos == null) {
+						returnStr = PushManage.getBackXMLTypeText(toName,
+								fromName,
+								"您周围1km还没有人发布拼车信息呢，快去邀请你认识的小伙伴前来发布吧~，回复：FW/服务信息内容/联系方式即可发布服务信息"
+										+ SEPARATOR
+										+ "如：FW/送水服务/X先生-13412345678");
+					} else {
+						int count = 0;
+						for (WxSqInfo wxSqInfo : sqInfos) {
+							count++;
+							builder.append(
+									count + ":" + wxSqInfo.getServiceInfo())
+									.append(SEPARATOR);
+						}
+						builder.insert(0, "在您周围1km范围内，为你找到" + count + "条服务信息"
+								+ SEPARATOR);
+						builder.append("您也要发布服务信息吗?回复：FW/服务信息内容/联系方式")
+								.append(SEPARATOR)
+								.append("如：FW/外卖服务/X先生-13412345678");
+						returnStr = PushManage.getBackXMLTypeText(toName,
+								fromName, builder.toString());
+					}
+				}
+			} else if (content.startsWith("FW/") || content.startsWith("fw/")) {
+				WxUserInfo from = DBManager.queryWxUserInfo(fromName);
+				if (from == null) {
+					returnStr = PushManage.getBackXMLTypeText(toName, fromName,
+							"您还没告诉我您的位置信息呢，请先发送位置~");
+				} else {
+					String serviceInfo = content.substring(3);
+					int updated = DBManager.updateWxSqInfo(fromName,
+							serviceInfo);
+					if (updated > 0) {
+						returnStr = PushManage.getBackXMLTypeText(toName,
+								fromName, "您发布的【" + serviceInfo
+										+ "】服务信息已经发布成功，有效期为1个月~");
+					} else {
+						returnStr = PushManage.getBackXMLTypeText(toName,
+								fromName, "您发布的【" + serviceInfo
+										+ "】服务信息未能发布成功，请重新发布~");
+					}
+				}
 			} else {
-				StringBuilder builder = new StringBuilder("欢迎使用即刻拼车平台:")
-						.append(SEPARATOR);
+				StringBuilder builder = new StringBuilder(
+						"欢迎使用 《即刻拼车》 以及 《社区名片》 平台:").append(SEPARATOR);
 				builder.append("首先请发送您的位置信息").append(SEPARATOR);
 				builder.append("1：信息发布者发送GO/目的地/联系方式").append(SEPARATOR);
 				builder.append("2：信息查询者发送TO/目的地").append(SEPARATOR);
+				builder.append("3：想知道你周边提供的生活服务吗？回复SQ").append(SEPARATOR);
 				builder.append("如：\"GO/亚运村-某先生/13812345678\"")
 						.append(SEPARATOR);
+				builder.append("在使用中遇到任何问题和建议请反馈至this4u@sina.com");
 				returnStr = PushManage.getBackXMLTypeText(toName, fromName,
 						builder.toString());
 			}
@@ -165,12 +220,14 @@ public class PushManage {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(链接信息):" + content);
 		} else if ("event".equals(type) && "subscribe".equals(event)) {// 订阅
-			StringBuilder builder = new StringBuilder("欢迎使用即刻拼车平台:")
-					.append(SEPARATOR);
+			StringBuilder builder = new StringBuilder(
+					"欢迎使用 《即刻拼车》 以及 《社区名片》 平台:").append(SEPARATOR);
 			builder.append("首先请发送您的位置信息").append(SEPARATOR);
 			builder.append("1：信息发布者发送GO/目的地/联系方式").append(SEPARATOR);
 			builder.append("2：信息查询者发送TO/目的地").append(SEPARATOR);
+			builder.append("3：想知道你周边提供的生活服务吗？回复SQ").append(SEPARATOR);
 			builder.append("如：\"GO/亚运村-某先生/13812345678\"").append(SEPARATOR);
+			builder.append("在使用中遇到任何问题和建议请反馈至this4u@sina.com");
 			returnStr = PushManage.getBackXMLTypeText(toName, fromName,
 					builder.toString());
 			logger.info(SimpleStringUtils.join("|", fromName, "订阅了我"));

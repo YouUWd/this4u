@@ -5,29 +5,43 @@ import java.util.Date;
 /**
  * @author YouU
  * @date 2014年12月9日
- * @desc 微信拼车信息封装
+ * @desc 用户位置信息
  */
-public class WxPcInfo {
+public class WxUserInfo {
 	private int id;
+
+	/**
+	 * 用户id
+	 */
 	private String usid;
+	/**
+	 * 纬度
+	 */
 	private float lc_x;
+	/**
+	 * 经度
+	 */
 	private float lc_y;
+	/**
+	 * 地名
+	 */
 	private String address;
-	private String destination;
+
+	/**
+	 * 用户信息更新时间
+	 */
 	private Date createTime;
 
-	public WxPcInfo() {
-
+	public WxUserInfo() {
 	}
 
-	public WxPcInfo(int id, String usid, float lc_x, float lc_y,
-			String address, String destination, Date createTime) {
+	public WxUserInfo(int id, String usid, float lc_x, float lc_y,
+			String address, Date createTime) {
 		this.id = id;
 		this.usid = usid;
 		this.lc_x = lc_x;
 		this.lc_y = lc_y;
 		this.address = address;
-		this.destination = destination;
 		this.createTime = createTime;
 	}
 
@@ -79,19 +93,11 @@ public class WxPcInfo {
 		this.createTime = createTime;
 	}
 
-	public String getDestination() {
-		return destination;
-	}
-
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
-
 	@Override
 	public String toString() {
-		return "WxPcInfo [id=" + id + ", usid=" + usid + ", lc_x=" + lc_x
-				+ ", lc_y=" + lc_y + ", address=" + address + ", destination="
-				+ destination + ", createTime=" + createTime + "]";
+		return "WxUserInfo [id=" + id + ", usid=" + usid + ", lc_x=" + lc_x
+				+ ", lc_y=" + lc_y + ", address=" + address + ", createTime="
+				+ createTime + "]";
 	}
 
 }
