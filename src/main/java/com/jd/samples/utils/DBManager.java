@@ -234,7 +234,7 @@ public class DBManager {
 		WxUserInfo wxUserInfo = null;
 		try {
 			wxUserInfo = qRunner.query(connection,
-					"select * from wuInfo where usid = ?",
+					"select * from wuinfo where usid = ?",
 					new BeanHandler<WxUserInfo>(WxUserInfo.class), usid);
 		} catch (SQLException e) {
 			logger.error("queryWxUserInfo fail", e);
