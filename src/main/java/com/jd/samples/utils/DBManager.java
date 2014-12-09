@@ -159,7 +159,7 @@ public class DBManager {
 			double[] around = DistanceUtil.getAround(lc_x, lc_y, 1000);
 			wxPcInfos = qRunner
 					.query(connection,
-							"select sq.* from sqinfo sq left join wuInfo wu on sq.usid = wu.usid where wu.lc_x between ? AND ? and wu.lc_y between ? AND ? and sq.createTime > TIMESTAMPADD(MONTH,-1,NOW())",
+							"select sq.* from sqinfo sq left join wuinfo wu on sq.usid = wu.usid where wu.lc_x between ? AND ? and wu.lc_y between ? AND ? and sq.createTime > TIMESTAMPADD(MONTH,-1,NOW())",
 							new BeanListHandler<WxSqInfo>(WxSqInfo.class),
 							around[0], around[2], around[1], around[3]);
 		} catch (SQLException e) {
@@ -184,7 +184,7 @@ public class DBManager {
 		try {
 			updated = qRunner
 					.update(connection,
-							"update wuinfo set lc_x = ?,lc_y=?,address=?,createTime=NOW() where usid = ?",
+							"update wuinfo set lc_x = ?,lc_y=?,address=? where usid = ?",
 							lc_x, lc_y, address, usid);
 			if (updated == 0) {
 				updated = qRunner
@@ -234,7 +234,7 @@ public class DBManager {
 		WxUserInfo wxUserInfo = null;
 		try {
 			wxUserInfo = qRunner.query(connection,
-					"select * from wuinfo where usid = ?",
+					"select * from wuinfo where usid = ? AND createTime > TIMESTAMPADD(MONTH,-1,NOW())",
 					new BeanHandler<WxUserInfo>(WxUserInfo.class), usid);
 		} catch (SQLException e) {
 			logger.error("queryWxUserInfo fail", e);
