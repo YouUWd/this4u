@@ -216,6 +216,8 @@ public class PushManage {
 					+ address);
 			DBManager.updateLocation(fromName, Float.parseFloat(lc_x),
 					Float.parseFloat(lc_y), address);// 更新用户地理位置信息
+			DBManager.updateWuInfo(fromName, Float.parseFloat(lc_x),
+					Float.parseFloat(lc_y), address);// 更新用户地理位置信息
 		} else if ("link".equals(type)) {
 			returnStr = getBackXMLTypeText(toName, fromName,
 					"平台建设中，你输入了(链接信息):" + content);
