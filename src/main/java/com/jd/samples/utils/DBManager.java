@@ -83,16 +83,25 @@ public class DBManager {
 		return updated;
 	}
 
+	/**
+	 * @param lc_x
+	 *            纬度
+	 * @param lc_y
+	 *            经度
+	 * @return 周边拼车信息
+	 */
 	public static List<WxPcInfo> queryInfos(float lc_x, float lc_y) {
 		Connection connection = getConnection();
 		QueryRunner qRunner = new QueryRunner();
 		List<WxPcInfo> wxPcInfos = null;
 		try {
+			// 1km范围内的经纬度
+			double[] around = DistanceUtil.getAround(lc_x, lc_y, 1000);
 			wxPcInfos = qRunner
 					.query(connection,
 							"select * from spcinfo where lc_x between ? AND ? and lc_y between ? AND ? and createTime > TIMESTAMPADD(MINUTE,-30,NOW())",
 							new BeanListHandler<WxPcInfo>(WxPcInfo.class),
-							lc_x - 1, lc_x + 1, lc_y - 1, lc_y + 1);
+							around[0], around[2], around[1], around[3]);
 		} catch (SQLException e) {
 			logger.error("queryInfos fail", e);
 		}
