@@ -150,7 +150,7 @@ public class PushManage {
 					if (sqInfos == null) {
 						returnStr = PushManage.getBackXMLTypeText(toName,
 								fromName,
-								"您周围1km还没有人发布拼车信息呢，快去邀请你认识的小伙伴前来发布吧~，回复：FW/服务信息内容/联系方式即可发布服务信息"
+								"您周围1km还没有人发布社区服务信息呢，快去邀请你认识的小伙伴前来发布吧~，"+SEPARATOR+"回复：FW/服务信息内容/联系方式即可发布服务信息"
 										+ SEPARATOR
 										+ "如：FW/送水服务/X先生-13412345678");
 					} else {
